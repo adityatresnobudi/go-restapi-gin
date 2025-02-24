@@ -98,7 +98,7 @@ func (a *accountServiceIMPL) Create(
 
 	result := dto.CreateAccountResponseDTO{
 		CommonBaseResponseDTO: dto.CommonBaseResponseDTO{Message: "Account created successfully"},
-		Data:                  *newAccount.ToAccountResponseDTO(),
+		Data:                  *newAccount.ToCreateAccountResponseDTO(),
 	}
 
 	return &result, nil

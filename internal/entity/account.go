@@ -29,6 +29,16 @@ func (a *Account) ToAccountResponseDTO() *dto.AccountResponseDTO {
 	}
 }
 
+func (a *Account) ToCreateAccountResponseDTO() *dto.CreateAccountResponse {
+	return &dto.CreateAccountResponse{
+		Id:            a.Id,
+		AccountNumber: a.AccountNumber,
+		AccountHolder: a.AccountHolder,
+		Balance:       a.Balance,
+		CreatedAt:     a.CreatedAt,
+	}
+}
+
 func (a Accounts) ToSliceOfAccountsResponseDTO() []dto.AccountResponseDTO {
 	result := []dto.AccountResponseDTO{}
 	for _, as := range a {

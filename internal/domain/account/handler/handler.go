@@ -42,7 +42,7 @@ func (a *accountHandler) GetAll(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, result)
+	c.JSON(http.StatusOK, result.Data)
 }
 
 // @Summary Get One Account By ID
@@ -62,7 +62,7 @@ func (a *accountHandler) GetOne(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, result)
+	c.JSON(http.StatusOK, result.Data)
 }
 
 // @Summary Create Account
