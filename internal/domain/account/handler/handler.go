@@ -53,7 +53,7 @@ func (a *accountHandler) GetAll(c *gin.Context) {
 // @Router /accounts/{id} [get]
 func (a *accountHandler) GetOne(c *gin.Context) {
 	ctx := c.Request.Context()
-	id := c.Request.PathValue("id")
+	id := c.Param("id")
 
 	result, err := a.service.GetOne(ctx, id)
 
@@ -102,7 +102,7 @@ func (a *accountHandler) Create(c *gin.Context) {
 // @Router /accounts [put]
 func (a *accountHandler) UpdateById(c *gin.Context) {
 	ctx := c.Request.Context()
-	id := c.Request.PathValue("id")
+	id := c.Param("id")
 	payload := dto.UpdateAccountRequestDTO{}
 
 	if err := c.ShouldBindJSON(&payload); err != nil {
@@ -130,7 +130,7 @@ func (a *accountHandler) UpdateById(c *gin.Context) {
 // @Router /accounts [delete]
 func (a *accountHandler) DeleteById(c *gin.Context) {
 	ctx := c.Request.Context()
-	id := c.Request.PathValue("id")
+	id := c.Param("id")
 
 	result, errData := a.service.DeleteById(ctx, id)
 
