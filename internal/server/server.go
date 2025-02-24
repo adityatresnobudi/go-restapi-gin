@@ -9,6 +9,7 @@ import (
 	"syscall"
 
 	"github.com/adityatresnobudi/go-restapi-gin/config"
+	"github.com/adityatresnobudi/go-restapi-gin/docs"
 	accHandler "github.com/adityatresnobudi/go-restapi-gin/internal/domain/account/handler"
 	accService "github.com/adityatresnobudi/go-restapi-gin/internal/domain/account/service"
 	trxHandler "github.com/adityatresnobudi/go-restapi-gin/internal/domain/transaction/handler"
@@ -61,6 +62,8 @@ func (s *server) Run() {
 	signal.Notify(ch, os.Interrupt)
 	signal.Notify(ch, syscall.SIGTERM)
 
+	docs.SwaggerInfo.Host = fmt.Sprintf("%s%s", s.cfg.Http.Host, s.cfg.Http.Port)
+
 	accountRepo := account_pg.NewRepo(db)
 	transactionRepo := transaction_pg.NewRepo(db)
 
@@ -75,7 +78,7 @@ func (s *server) Run() {
 
 	go func() {
 		log.Printf("Listening on PORT: %s\n", s.cfg.Http.Port)
-		if err := s.r.Run(); err != nil {
+		if err := s.runGinServer(); err != nil {
 			log.Printf("s.r.Run: %s\n", err.Error())
 		}
 
