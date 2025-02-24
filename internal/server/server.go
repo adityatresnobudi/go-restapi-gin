@@ -9,6 +9,9 @@ import (
 	"syscall"
 
 	"github.com/adityatresnobudi/go-restapi-gin/config"
+	accHandler "github.com/adityatresnobudi/go-restapi-gin/internal/domain/account/handler"
+	accService "github.com/adityatresnobudi/go-restapi-gin/internal/domain/account/service"
+	"github.com/adityatresnobudi/go-restapi-gin/internal/repositories/account_repo/account_pg"
 	"github.com/adityatresnobudi/go-restapi-gin/pkg/postgres"
 	"github.com/gin-gonic/gin"
 )
@@ -54,6 +57,14 @@ func (s *server) Run() {
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, os.Interrupt)
 	signal.Notify(ch, syscall.SIGTERM)
+
+	accountRepo := account_pg.NewRepo(db)
+
+	accountService := accService.NewAccountService(accountRepo)
+
+	accountHandler := accHandler.NewAccountHandler(s.r, ctx, accountService)
+
+	accountHandler.MapRoutes()
 
 	go func() {
 		log.Printf("Listening on PORT: %s\n", s.cfg.Http.Port)
