@@ -13,20 +13,20 @@ type TransactionResponseDTO struct {
 	Amount        float64   `json:"amount" example:"10.3"`
 	CreatedAt     time.Time `json:"created_at" example:"2025-02-22T15:11:19.25616+07:00"`
 	UpdatedAt     time.Time `json:"updated_at" example:"2025-02-22T15:11:19.25616+07:00"`
-}
+} // @name TransactionResponseDTO
 
 type CreateTransactionRequestDTO struct {
 	FromAccountId string  `json:"from_account_id"`
 	ToAccountId   string  `json:"to_account_id"`
 	Amount        float64 `json:"amount"`
-}
+} // @name CreateTransactionRequestDTO
 
 type GetTransactionByIdResponseDTO struct {
 	CommonBaseResponseDTO
 	Data []TransactionResponseDTO `json:"data"`
-}
+} // @name GetTransactionByIdResponseDTO
 
 type CreateTransactionResponseDTO struct {
 	CommonBaseResponseDTO
 	Data TransactionResponseDTO `json:"data"`
-}
+} // @name CreateTransactionResponseDTO
