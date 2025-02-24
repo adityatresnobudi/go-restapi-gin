@@ -1,0 +1,397 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/accounts": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Get All Accounts",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/GetAllAccountsResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Update Account",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Account ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Request Body",
+                        "name": "requestBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UpdateAccountRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/UpdateAccountResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Create Account",
+                "parameters": [
+                    {
+                        "description": "Request Body",
+                        "name": "requestBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/CreateAccountRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/CreateAccountResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Delete Account",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Account ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No Content",
+                        "schema": {
+                            "$ref": "#/definitions/DeleteAccountResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/accounts/{id}": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "accounts"
+                ],
+                "summary": "Get One Account By ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "account ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/GetOneAccountResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/accounts/{id}/transactions": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "transactions"
+                ],
+                "summary": "Get All Transaction By ID",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Transaction ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/GetTransactionByIdResponseDTO"
+                        }
+                    }
+                }
+            }
+        },
+        "/transactions": {
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "transactions"
+                ],
+                "summary": "Create Transaction",
+                "parameters": [
+                    {
+                        "description": "Request Body",
+                        "name": "requestBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/CreateTransactionRequestDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/CreateTransactionResponseDTO"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "AccountResponse": {
+            "type": "object",
+            "properties": {
+                "account_holder": {
+                    "type": "string",
+                    "example": "adit"
+                },
+                "account_number": {
+                    "type": "string",
+                    "example": "233455011"
+                },
+                "balance": {
+                    "type": "number",
+                    "example": 10.3
+                },
+                "created_at": {
+                    "type": "string",
+                    "example": "2025-02-22T15:11:19.25616+07:00"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "d470a4f0-cd65-497d-9198-c16bbf670447"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2025-02-22T15:11:19.25616+07:00"
+                }
+            }
+        },
+        "CreateAccountRequest": {
+            "type": "object",
+            "properties": {
+                "account_holder": {
+                    "type": "string",
+                    "example": "thomas"
+                },
+                "account_number": {
+                    "type": "string",
+                    "example": "1234567890"
+                },
+                "balance": {
+                    "type": "number",
+                    "example": 50000
+                }
+            }
+        },
+        "CreateAccountResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/CreateAccountResponse"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "OK"
+                }
+            }
+        },
+        "CreateTransactionRequestDTO": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number"
+                },
+                "from_account_id": {
+                    "type": "string"
+                },
+                "to_account_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "CreateTransactionResponseDTO": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/TransactionResponseDTO"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "OK"
+                }
+            }
+        },
+        "DeleteAccountResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string",
+                    "example": "OK"
+                }
+            }
+        },
+        "GetAllAccountsResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/AccountResponse"
+                    }
+                }
+            }
+        },
+        "GetOneAccountResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/AccountResponse"
+                }
+            }
+        },
+        "GetTransactionByIdResponseDTO": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/TransactionResponseDTO"
+                    }
+                },
+                "message": {
+                    "type": "string",
+                    "example": "OK"
+                }
+            }
+        },
+        "TransactionResponseDTO": {
+            "type": "object",
+            "properties": {
+                "amount": {
+                    "type": "number",
+                    "example": 10.3
+                },
+                "created_at": {
+                    "type": "string",
+                    "example": "2025-02-22T15:11:19.25616+07:00"
+                },
+                "from_account_id": {
+                    "type": "string",
+                    "example": "233455011"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "ddcba067-37a7-4381-8f4a-c2c0bc2891e0"
+                },
+                "to_account_id": {
+                    "type": "string",
+                    "example": "233455011"
+                },
+                "updated_at": {
+                    "type": "string",
+                    "example": "2025-02-22T15:11:19.25616+07:00"
+                }
+            }
+        },
+        "UpdateAccountRequest": {
+            "type": "object",
+            "properties": {
+                "account_holder": {
+                    "type": "string",
+                    "example": "thomas"
+                },
+                "balance": {
+                    "type": "number",
+                    "example": 50000
+                }
+            }
+        },
+        "UpdateAccountResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/AccountResponse"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "OK"
+                }
+            }
+        }
+    }
+}

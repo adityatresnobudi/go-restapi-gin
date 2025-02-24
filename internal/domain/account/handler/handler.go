@@ -98,7 +98,7 @@ func (a *accountHandler) Create(c *gin.Context) {
 // @Produce json
 // @Param id path string true "Account ID"
 // @Param requestBody body UpdateAccountRequest true "Request Body"
-// @Success 200 {object} UpdateByIdAccountResponse
+// @Success 200 {object} UpdateAccountResponse
 // @Router /accounts [put]
 func (a *accountHandler) UpdateById(c *gin.Context) {
 	ctx := c.Request.Context()
@@ -126,7 +126,7 @@ func (a *accountHandler) UpdateById(c *gin.Context) {
 // @Accept json
 // @Produce json
 // @Param id path string true "Account ID"
-// @Success 204 {object} DeleteByIdAccountResponse
+// @Success 204 {object} DeleteAccountResponse
 // @Router /accounts [delete]
 func (a *accountHandler) DeleteById(c *gin.Context) {
 	ctx := c.Request.Context()

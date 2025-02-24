@@ -1,0 +1,262 @@
+definitions:
+  AccountResponse:
+    properties:
+      account_holder:
+        example: adit
+        type: string
+      account_number:
+        example: "233455011"
+        type: string
+      balance:
+        example: 10.3
+        type: number
+      created_at:
+        example: "2025-02-22T15:11:19.25616+07:00"
+        type: string
+      id:
+        example: d470a4f0-cd65-497d-9198-c16bbf670447
+        type: string
+      updated_at:
+        example: "2025-02-22T15:11:19.25616+07:00"
+        type: string
+    type: object
+  CreateAccountRequest:
+    properties:
+      account_holder:
+        example: thomas
+        type: string
+      account_number:
+        example: "1234567890"
+        type: string
+      balance:
+        example: 50000
+        type: number
+    type: object
+  CreateAccountResponse:
+    properties:
+      data:
+        $ref: '#/definitions/CreateAccountResponse'
+      message:
+        example: OK
+        type: string
+    type: object
+  CreateTransactionRequestDTO:
+    properties:
+      amount:
+        type: number
+      from_account_id:
+        type: string
+      to_account_id:
+        type: string
+    type: object
+  CreateTransactionResponseDTO:
+    properties:
+      data:
+        $ref: '#/definitions/TransactionResponseDTO'
+      message:
+        example: OK
+        type: string
+    type: object
+  DeleteAccountResponse:
+    properties:
+      message:
+        example: OK
+        type: string
+    type: object
+  GetAllAccountsResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/AccountResponse'
+        type: array
+    type: object
+  GetOneAccountResponse:
+    properties:
+      data:
+        $ref: '#/definitions/AccountResponse'
+    type: object
+  GetTransactionByIdResponseDTO:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/TransactionResponseDTO'
+        type: array
+      message:
+        example: OK
+        type: string
+    type: object
+  TransactionResponseDTO:
+    properties:
+      amount:
+        example: 10.3
+        type: number
+      created_at:
+        example: "2025-02-22T15:11:19.25616+07:00"
+        type: string
+      from_account_id:
+        example: "233455011"
+        type: string
+      id:
+        example: ddcba067-37a7-4381-8f4a-c2c0bc2891e0
+        type: string
+      to_account_id:
+        example: "233455011"
+        type: string
+      updated_at:
+        example: "2025-02-22T15:11:19.25616+07:00"
+        type: string
+    type: object
+  UpdateAccountRequest:
+    properties:
+      account_holder:
+        example: thomas
+        type: string
+      balance:
+        example: 50000
+        type: number
+    type: object
+  UpdateAccountResponse:
+    properties:
+      data:
+        $ref: '#/definitions/AccountResponse'
+      message:
+        example: OK
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /accounts:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            $ref: '#/definitions/DeleteAccountResponse'
+      summary: Delete Account
+      tags:
+      - accounts
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GetAllAccountsResponse'
+      summary: Get All Accounts
+      tags:
+      - accounts
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Request Body
+        in: body
+        name: requestBody
+        required: true
+        schema:
+          $ref: '#/definitions/CreateAccountRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/CreateAccountResponse'
+      summary: Create Account
+      tags:
+      - accounts
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Account ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Request Body
+        in: body
+        name: requestBody
+        required: true
+        schema:
+          $ref: '#/definitions/UpdateAccountRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/UpdateAccountResponse'
+      summary: Update Account
+      tags:
+      - accounts
+  /accounts/{id}:
+    get:
+      parameters:
+      - description: account ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GetOneAccountResponse'
+      summary: Get One Account By ID
+      tags:
+      - accounts
+  /accounts/{id}/transactions:
+    get:
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GetTransactionByIdResponseDTO'
+      summary: Get All Transaction By ID
+      tags:
+      - transactions
+  /transactions:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Request Body
+        in: body
+        name: requestBody
+        required: true
+        schema:
+          $ref: '#/definitions/CreateTransactionRequestDTO'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/CreateTransactionResponseDTO'
+      summary: Create Transaction
+      tags:
+      - transactions
+swagger: "2.0"
