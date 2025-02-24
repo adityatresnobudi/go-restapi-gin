@@ -11,7 +11,10 @@ import (
 	"github.com/adityatresnobudi/go-restapi-gin/config"
 	accHandler "github.com/adityatresnobudi/go-restapi-gin/internal/domain/account/handler"
 	accService "github.com/adityatresnobudi/go-restapi-gin/internal/domain/account/service"
+	trxHandler "github.com/adityatresnobudi/go-restapi-gin/internal/domain/transaction/handler"
+	trxService "github.com/adityatresnobudi/go-restapi-gin/internal/domain/transaction/service"
 	"github.com/adityatresnobudi/go-restapi-gin/internal/repositories/account_repo/account_pg"
+	"github.com/adityatresnobudi/go-restapi-gin/internal/repositories/transaction_repo/transaction_pg"
 	"github.com/adityatresnobudi/go-restapi-gin/pkg/postgres"
 	"github.com/gin-gonic/gin"
 )
@@ -59,12 +62,16 @@ func (s *server) Run() {
 	signal.Notify(ch, syscall.SIGTERM)
 
 	accountRepo := account_pg.NewRepo(db)
+	transactionRepo := transaction_pg.NewRepo(db)
 
 	accountService := accService.NewAccountService(accountRepo)
+	transactionService := trxService.NewTransactionService(transactionRepo, accountRepo)
 
 	accountHandler := accHandler.NewAccountHandler(s.r, ctx, accountService)
+	transactionHandler := trxHandler.NewTransactionHandler(s.r, ctx, transactionService)
 
 	accountHandler.MapRoutes()
+	transactionHandler.MapRoutes()
 
 	go func() {
 		log.Printf("Listening on PORT: %s\n", s.cfg.Http.Port)
