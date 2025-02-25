@@ -9,6 +9,7 @@ import (
 type Config struct {
 	Postgres PostgresConfig
 	Http     HttpConfig
+	Jwt      JwtConfig
 }
 
 type PostgresConfig struct {
@@ -24,6 +25,10 @@ type HttpConfig struct {
 	Host string
 }
 
+type JwtConfig struct {
+	SecretKey string
+}
+
 func NewConfig() Config {
 	cfg := Config{
 		Http: HttpConfig{
@@ -36,6 +41,9 @@ func NewConfig() Config {
 			User:     os.Getenv(constants.DBUser),
 			Password: os.Getenv(constants.DBPassword),
 			DBName:   os.Getenv(constants.DBName),
+		},
+		Jwt: JwtConfig{
+			SecretKey: os.Getenv(constants.SecretKey),
 		},
 	}
 

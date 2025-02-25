@@ -8,6 +8,7 @@ const (
 	DBPassword = "DB_PASSWORD"
 	DBName     = "DB_NAME"
 	APIHost    = "API_HOST"
+	SecretKey  = "SECRET_KEY"
 )
 
 const (
