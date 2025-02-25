@@ -47,13 +47,26 @@ func InitializeTable(db *sql.DB) error {
   		updated_at TIMESTAMPTZ DEFAULT NOW()
 	);`
 
+	q3 := `
+		CREATE TABLE IF NOT EXISTS users (
+		id BIGSERIAL PRIMARY KEY NOT NULL,
+		username VARCHAR(255) NOT NULL,
+		password VARCHAR(255) NOT NULL
+	);
+	`
+
 	if _, err := db.Exec(q1); err != nil {
-		log.Printf("initialize table error: %s\n", err.Error())
+		log.Printf("initialize table accounts: %s\n", err.Error())
 		return err
 	}
 
 	if _, err := db.Exec(q2); err != nil {
-		log.Printf("initialize table error: %s\n", err.Error())
+		log.Printf("initialize table transactions: %s\n", err.Error())
+		return err
+	}
+
+	if _, err := db.Exec(q3); err != nil {
+		log.Printf("initialize table users: %s\n", err.Error())
 		return err
 	}
 
