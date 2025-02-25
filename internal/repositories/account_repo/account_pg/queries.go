@@ -32,3 +32,9 @@ const DELETE_ACCOUNT = `
 	DELETE FROM accounts
 	WHERE id = $1
 `
+
+const UPDATE_BALANCE = `
+	UPDATE accounts
+	SET balance = $1
+	WHERE id = $2
+`

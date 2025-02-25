@@ -97,20 +97,25 @@ func (t *transactionServiceIMPL) Create(
 		Balance:       existingAccountTo.Balance + transaction.Amount,
 	}
 
+	err = t.accountRepo.TransferById(ctx, accountFrom, accountTo)
+	if err != nil {
+		return nil, err
+	}
+
 	resp, err := t.transactionRepo.Create(ctx, newTransaction)
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = t.accountRepo.UpdateById(ctx, accountFrom)
-	if err != nil {
-		return nil, err
-	}
+	// _, err = t.accountRepo.UpdateById(ctx, accountFrom)
+	// if err != nil {
+	// 	return nil, err
+	// }
 
-	_, err = t.accountRepo.UpdateById(ctx, accountTo)
-	if err != nil {
-		return nil, err
-	}
+	// _, err = t.accountRepo.UpdateById(ctx, accountTo)
+	// if err != nil {
+	// 	return nil, err
+	// }
 
 	result := dto.CreateTransactionResponseDTO{
 		CommonBaseResponseDTO: dto.CommonBaseResponseDTO{Message: "Transaction created successfully"},

@@ -13,6 +13,7 @@ type Repository interface {
 	GetOneById(ctx context.Context, id uuid.UUID) (*entity.Account, errors.MessageErr)
 	Create(ctx context.Context, account entity.Account) (*entity.Account, errors.MessageErr)
 	GetOneByAccountNumber(ctx context.Context, accountNumber string) (*entity.Account, errors.MessageErr)
-	UpdateById(ctx context.Context, accuont entity.Account) (*entity.Account, errors.MessageErr)
+	UpdateById(ctx context.Context, account entity.Account) (*entity.Account, errors.MessageErr)
 	DeleteById(ctx context.Context, id uuid.UUID) errors.MessageErr
+	TransferById(ctx context.Context, accountFromId, accountToId entity.Account) (errors.MessageErr)
 }

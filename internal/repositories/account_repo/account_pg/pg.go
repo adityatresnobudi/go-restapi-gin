@@ -169,3 +169,38 @@ func (a *accountPG) DeleteById(ctx context.Context, id uuid.UUID) errors.Message
 
 	return nil
 }
+func (a *accountPG) TransferById(ctx context.Context, accountFromId, accountToId entity.Account) errors.MessageErr {
+	tx, err := a.db.BeginTx(ctx, nil)
+    if err != nil {
+        log.Printf("tx begin: %s\n", err.Error())
+    }
+	defer tx.Rollback()
+
+
+	if _, err := tx.ExecContext(
+		ctx,
+		UPDATE_BALANCE,
+		accountFromId.Balance,
+		accountFromId.Id,
+	); err != nil {
+		log.Printf("tx update transfer from by id: %s\n", err.Error())
+		return errors.NewInternalServerError()
+	}
+
+	if _, err := tx.ExecContext(
+		ctx,
+		UPDATE_BALANCE,
+		accountToId.Balance,
+		accountToId.Id,
+	); err != nil {
+		log.Printf("tx update transfer to by id: %s\n", err.Error())
+		return errors.NewInternalServerError()
+	}
+
+	if err = tx.Commit(); err != nil {
+		log.Printf("tx commit update transfer: %s\n", err.Error())
+        return errors.NewInternalServerError()
+    }
+
+	return nil
+}
