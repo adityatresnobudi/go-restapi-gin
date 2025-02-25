@@ -12,5 +12,5 @@ const (
 
 const (
 	BEARER                      = "Bearer"
-	INVALID_TOKEN_ERROR_MESSAGE = "Invalid token."
+	INVALID_TOKEN_ERROR_MESSAGE = "invalid token"
 )
