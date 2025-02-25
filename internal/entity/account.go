@@ -12,6 +12,7 @@ type Account struct {
 	AccountNumber string
 	AccountHolder string
 	Balance       float64
+	Roles         string
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
 }
@@ -24,6 +25,7 @@ func (a *Account) ToAccountResponseDTO() *dto.AccountResponseDTO {
 		AccountNumber: a.AccountNumber,
 		AccountHolder: a.AccountHolder,
 		Balance:       a.Balance,
+		Roles:         a.Roles,
 		CreatedAt:     a.CreatedAt,
 		UpdatedAt:     a.UpdatedAt,
 	}
@@ -35,6 +37,7 @@ func (a *Account) ToCreateAccountResponseDTO() *dto.CreateAccountResponse {
 		AccountNumber: a.AccountNumber,
 		AccountHolder: a.AccountHolder,
 		Balance:       a.Balance,
+		Roles:         a.Roles,
 		CreatedAt:     a.CreatedAt,
 	}
 }

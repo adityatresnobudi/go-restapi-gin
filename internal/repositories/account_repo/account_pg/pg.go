@@ -39,6 +39,7 @@ func (a *accountPG) GetAll(ctx context.Context) ([]entity.Account, errs.MessageE
 			&account.AccountNumber,
 			&account.AccountHolder,
 			&account.Balance,
+			&account.Roles,
 			&account.CreatedAt,
 			&account.UpdatedAt,
 		); err != nil {
@@ -70,6 +71,7 @@ func (a *accountPG) GetOneById(ctx context.Context, id uuid.UUID) (*entity.Accou
 		&account.AccountNumber,
 		&account.AccountHolder,
 		&account.Balance,
+		&account.Roles,
 		&account.CreatedAt,
 		&account.UpdatedAt,
 	); err != nil {
@@ -95,6 +97,7 @@ func (a *accountPG) GetOneByAccountNumber(ctx context.Context, accountNum string
 		&account.AccountNumber,
 		&account.AccountHolder,
 		&account.Balance,
+		&account.Roles,
 		&account.CreatedAt,
 		&account.UpdatedAt,
 	); err != nil {
@@ -117,11 +120,13 @@ func (a *accountPG) Create(ctx context.Context, account entity.Account) (*entity
 		account.AccountNumber,
 		account.AccountHolder,
 		account.Balance,
+		account.Roles,
 	).Scan(
 		&newAccount.Id,
 		&newAccount.AccountNumber,
 		&newAccount.AccountHolder,
 		&newAccount.Balance,
+		&newAccount.Roles,
 		&newAccount.CreatedAt,
 		&newAccount.UpdatedAt,
 	); err != nil {
@@ -145,6 +150,7 @@ func (a *accountPG) UpdateById(ctx context.Context, account entity.Account) (*en
 		&response.AccountNumber,
 		&response.AccountHolder,
 		&response.Balance,
+		&response.Roles,
 		&response.CreatedAt,
 		&response.UpdatedAt,
 	); err != nil {

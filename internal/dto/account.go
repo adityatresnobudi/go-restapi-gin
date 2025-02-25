@@ -11,6 +11,7 @@ type AccountResponseDTO struct {
 	AccountNumber string    `json:"account_number" example:"233455011"`
 	AccountHolder string    `json:"account_holder" example:"adit"`
 	Balance       float64   `json:"balance" example:"10.3"`
+	Roles         string    `json:"roles" example:"user"`
 	CreatedAt     time.Time `json:"created_at" example:"2025-02-22T15:11:19.25616+07:00"`
 	UpdatedAt     time.Time `json:"updated_at" example:"2025-02-22T15:11:19.25616+07:00"`
 } // @name AccountResponse
@@ -26,6 +27,7 @@ type CreateAccountResponse struct {
 	AccountNumber string    `json:"account_number" example:"233455011"`
 	AccountHolder string    `json:"account_holder" example:"adit"`
 	Balance       float64   `json:"balance" example:"10.3"`
+	Roles         string    `json:"roles" example:"user"`
 	CreatedAt     time.Time `json:"created_at" example:"2025-02-22T15:11:19.25616+07:00"`
 } // @name CreateAccountResponse
 
