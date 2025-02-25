@@ -38,8 +38,7 @@ func NewAccountHandler(
 // @Success 200 {object}  GetAllAccountsResponse
 // @Router /accounts [get]
 func (a *accountHandler) GetAll(c *gin.Context) {
-	ctx := c.Request.Context()
-	result, err := a.service.GetAll(ctx)
+	result, err := a.service.GetAll(a.ctx)
 
 	if err != nil {
 		c.JSON(err.StatusCode(), err)
@@ -56,10 +55,9 @@ func (a *accountHandler) GetAll(c *gin.Context) {
 // @Success 200 {object}  GetOneAccountResponse
 // @Router /accounts/{id} [get]
 func (a *accountHandler) GetOne(c *gin.Context) {
-	ctx := c.Request.Context()
 	id := c.Param("id")
 
-	result, err := a.service.GetOne(ctx, id)
+	result, err := a.service.GetOne(a.ctx, id)
 
 	if err != nil {
 		c.JSON(err.StatusCode(), err)
@@ -77,7 +75,6 @@ func (a *accountHandler) GetOne(c *gin.Context) {
 // @Success 200 {object} CreateAccountResponse
 // @Router /accounts [post]
 func (a *accountHandler) Create(c *gin.Context) {
-	ctx := c.Request.Context()
 	payload := dto.CreateAccountRequestDTO{}
 
 	if err := c.ShouldBindJSON(&payload); err != nil {
@@ -86,7 +83,7 @@ func (a *accountHandler) Create(c *gin.Context) {
 		return
 	}
 
-	result, err := a.service.Create(ctx, payload)
+	result, err := a.service.Create(a.ctx, payload)
 
 	if err != nil {
 		c.JSON(err.StatusCode(), err)
@@ -105,7 +102,6 @@ func (a *accountHandler) Create(c *gin.Context) {
 // @Success 200 {object} UpdateAccountResponse
 // @Router /accounts [put]
 func (a *accountHandler) UpdateById(c *gin.Context) {
-	ctx := c.Request.Context()
 	id := c.Param("id")
 	payload := dto.UpdateAccountRequestDTO{}
 
@@ -115,7 +111,7 @@ func (a *accountHandler) UpdateById(c *gin.Context) {
 		return
 	}
 
-	result, errData := a.service.UpdateById(ctx, id, payload)
+	result, errData := a.service.UpdateById(a.ctx, id, payload)
 
 	if errData != nil {
 		c.JSON(errData.StatusCode(), errData)
@@ -133,10 +129,9 @@ func (a *accountHandler) UpdateById(c *gin.Context) {
 // @Success 204 {object} DeleteAccountResponse
 // @Router /accounts [delete]
 func (a *accountHandler) DeleteById(c *gin.Context) {
-	ctx := c.Request.Context()
 	id := c.Param("id")
 
-	result, errData := a.service.DeleteById(ctx, id)
+	result, errData := a.service.DeleteById(a.ctx, id)
 
 	if errData != nil {
 		c.JSON(errData.StatusCode(), errData)

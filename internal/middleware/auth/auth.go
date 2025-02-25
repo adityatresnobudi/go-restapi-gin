@@ -12,6 +12,7 @@ import (
 
 type AuthMiddleware interface {
 	Authentication() gin.HandlerFunc
+	AdminAuthorization() gin.HandlerFunc
 }
 
 type authMiddlewareIMPL struct {
@@ -61,7 +62,20 @@ func (a *authMiddlewareIMPL) Authentication() gin.HandlerFunc {
 		}
 
 		c.Set("userId", int(id))
-		c.Set("role", user.Roles)
+		c.Set("roles", user.Roles)
+
+		c.Next()
+	}
+}
+
+func (a *authMiddlewareIMPL) AdminAuthorization() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		role := c.Value("roles").(string)
+		if role != "admin" {
+			errData := errs.NewUnauthorizedError("cannot access this endpoint")
+			c.AbortWithStatusJSON(errData.StatusCode(), errData)
+			return
+		}
 
 		c.Next()
 	}
