@@ -42,7 +42,7 @@ func (a *authMiddlewareIMPL) Authentication() gin.HandlerFunc {
 		mapClaims, err := a.internalJwt.ValidateBearerToken(token, a.cfg.Jwt.SecretKey)
 
 		if err != nil {
-			c.JSON(err.StatusCode(), err)
+			c.AbortWithStatusJSON(err.StatusCode(), err)
 			return
 		}
 
@@ -50,13 +50,13 @@ func (a *authMiddlewareIMPL) Authentication() gin.HandlerFunc {
 
 		if !ok {
 			err := errs.NewUnauthenticatedError("invalid token.")
-			c.JSON(err.StatusCode(), err)
+			c.AbortWithStatusJSON(err.StatusCode(), err)
 			return
 		}
 
 		user, err := a.userService.GetById(a.ctx, int(id))
 		if err != nil {
-			c.JSON(err.StatusCode(), err)
+			c.AbortWithStatusJSON(err.StatusCode(), err)
 			return
 		}
 

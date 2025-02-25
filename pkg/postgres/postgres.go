@@ -51,9 +51,8 @@ func InitializeTable(db *sql.DB) error {
 		id BIGSERIAL PRIMARY KEY NOT NULL,
 		username VARCHAR(255) NOT NULL,
 		password VARCHAR(255) NOT NULL,
-		roles VARCHAR(50) NOT NULL CHECK (roles IN ('user', 'admin')) DEFAULT 'user',
-	);
-	`
+		roles VARCHAR(50) NOT NULL CHECK (roles IN ('user', 'admin')) DEFAULT 'user'
+	);`
 
 	if _, err := db.Exec(q1); err != nil {
 		log.Printf("initialize table accounts: %s\n", err.Error())
