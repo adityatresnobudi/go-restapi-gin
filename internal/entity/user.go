@@ -22,7 +22,7 @@ func (u *User) ToUserResponseDTO() *dto.UserResponseDTO {
 	return &dto.UserResponseDTO{
 		Id:        u.Id,
 		Username:  u.Username,
-		Roles: u.Roles,
+		Roles:     u.Roles,
 		CreatedAt: u.CreatedAt,
 		UpdatedAt: u.UpdatedAt,
 	}
@@ -55,6 +55,7 @@ func (u *User) NewClaim() jwt.MapClaims {
 	return jwt.MapClaims{
 		"id":       u.Id,
 		"username": u.Username,
+		"roles":    u.Roles,
 		"expr":     time.Now().Add(24 * time.Hour),
 	}
 }

@@ -35,7 +35,8 @@ func (u *userPG) GetByUsername(ctx context.Context, username string) (*entity.Us
 	if err := u.db.QueryRowContext(ctx, GET_BY_USERNAME_QUERY, username).Scan(
 		&user.Id,
 		&user.Username,
-		&user.Password); err != nil {
+		&user.Password,
+		&user.Roles); err != nil {
 		log.Printf("db get by username: %s\n", err.Error())
 		if err == sql.ErrNoRows {
 			return nil, errs.NewNotFoundError("user was not found")
@@ -52,7 +53,8 @@ func (u *userPG) GetById(ctx context.Context, id int) (*entity.User, errs.Messag
 	if err := u.db.QueryRowContext(ctx, GET_BY_ID_QUERY, id).Scan(
 		&user.Id,
 		&user.Username,
-		&user.Password); err != nil {
+		&user.Password,
+		&user.Roles); err != nil {
 		log.Printf("db get by id: %s\n", err.Error())
 		if err == sql.ErrNoRows {
 			return nil, errs.NewNotFoundError("user was not found")
