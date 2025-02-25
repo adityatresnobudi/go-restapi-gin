@@ -7,7 +7,7 @@ import (
 
 	"github.com/adityatresnobudi/go-restapi-gin/internal/entity"
 	"github.com/adityatresnobudi/go-restapi-gin/internal/repositories/account_repo"
-	"github.com/adityatresnobudi/go-restapi-gin/pkg/errors"
+	"github.com/adityatresnobudi/go-restapi-gin/pkg/errs"
 	"github.com/google/uuid"
 )
 
@@ -21,12 +21,12 @@ func NewRepo(db *sql.DB) account_repo.Repository {
 	}
 }
 
-func (a *accountPG) GetAll(ctx context.Context) ([]entity.Account, errors.MessageErr) {
+func (a *accountPG) GetAll(ctx context.Context) ([]entity.Account, errs.MessageErr) {
 	rows, err := a.db.QueryContext(ctx, GET_ALL_ACCOUNTS)
 
 	if err != nil {
 		log.Printf("db get all accounts: %s\n", err.Error())
-		return nil, errors.NewInternalServerError()
+		return nil, errs.NewInternalServerError()
 	}
 
 	result := []entity.Account{}
@@ -43,7 +43,7 @@ func (a *accountPG) GetAll(ctx context.Context) ([]entity.Account, errors.Messag
 			&account.UpdatedAt,
 		); err != nil {
 			log.Printf("db scan get all accounts: %s\n", err.Error())
-			return nil, errors.NewInternalServerError()
+			return nil, errs.NewInternalServerError()
 		}
 
 		result = append(result, account)
@@ -52,13 +52,13 @@ func (a *accountPG) GetAll(ctx context.Context) ([]entity.Account, errors.Messag
 	return result, nil
 }
 
-func (a *accountPG) GetOneById(ctx context.Context, id uuid.UUID) (*entity.Account, errors.MessageErr) {
+func (a *accountPG) GetOneById(ctx context.Context, id uuid.UUID) (*entity.Account, errs.MessageErr) {
 	_, err := a.db.QueryContext(ctx, GET_ACCOUNT_BY_ID, id)
 	account := entity.Account{}
 
 	if err != nil {
 		log.Printf("db get one account by id: %s\n", err.Error())
-		return nil, errors.NewInternalServerError()
+		return nil, errs.NewInternalServerError()
 	}
 
 	if err := a.db.QueryRowContext(
@@ -75,15 +75,15 @@ func (a *accountPG) GetOneById(ctx context.Context, id uuid.UUID) (*entity.Accou
 	); err != nil {
 		log.Printf("db scan get one account by id: %s\n", err.Error())
 		if err == sql.ErrNoRows {
-			return nil, errors.NewNotFoundError("account was not found")
+			return nil, errs.NewNotFoundError("account was not found")
 		}
-		return nil, errors.NewInternalServerError()
+		return nil, errs.NewInternalServerError()
 	}
 
 	return &account, nil
 }
 
-func (a *accountPG) GetOneByAccountNumber(ctx context.Context, accountNum string) (*entity.Account, errors.MessageErr) {
+func (a *accountPG) GetOneByAccountNumber(ctx context.Context, accountNum string) (*entity.Account, errs.MessageErr) {
 	account := entity.Account{}
 
 	if err := a.db.QueryRowContext(
@@ -100,15 +100,15 @@ func (a *accountPG) GetOneByAccountNumber(ctx context.Context, accountNum string
 	); err != nil {
 		log.Printf("db scan get one account by accountNum: %s\n", err.Error())
 		if err == sql.ErrNoRows {
-			return nil, errors.NewNotFoundError("account was not found")
+			return nil, errs.NewNotFoundError("account was not found")
 		}
-		return nil, errors.NewInternalServerError()
+		return nil, errs.NewInternalServerError()
 	}
 
 	return &account, nil
 }
 
-func (a *accountPG) Create(ctx context.Context, account entity.Account) (*entity.Account, errors.MessageErr) {
+func (a *accountPG) Create(ctx context.Context, account entity.Account) (*entity.Account, errs.MessageErr) {
 	newAccount := entity.Account{}
 
 	if err := a.db.QueryRowContext(
@@ -126,12 +126,12 @@ func (a *accountPG) Create(ctx context.Context, account entity.Account) (*entity
 		&newAccount.UpdatedAt,
 	); err != nil {
 		log.Printf("db scan create account: %s\n", err.Error())
-		return nil, errors.NewInternalServerError()
+		return nil, errs.NewInternalServerError()
 	}
 
 	return &newAccount, nil
 }
-func (a *accountPG) UpdateById(ctx context.Context, account entity.Account) (*entity.Account, errors.MessageErr) {
+func (a *accountPG) UpdateById(ctx context.Context, account entity.Account) (*entity.Account, errs.MessageErr) {
 	response := entity.Account{}
 
 	if err := a.db.QueryRowContext(
@@ -150,26 +150,26 @@ func (a *accountPG) UpdateById(ctx context.Context, account entity.Account) (*en
 	); err != nil {
 		log.Printf("db scan update account by id: %s\n", err.Error())
 		if err == sql.ErrNoRows {
-			return nil, errors.NewNotFoundError("account was not found")
+			return nil, errs.NewNotFoundError("account was not found")
 		}
-		return nil, errors.NewInternalServerError()
+		return nil, errs.NewInternalServerError()
 	}
 
 	return &response, nil
 }
-func (a *accountPG) DeleteById(ctx context.Context, id uuid.UUID) errors.MessageErr {
+func (a *accountPG) DeleteById(ctx context.Context, id uuid.UUID) errs.MessageErr {
 	if _, err := a.db.ExecContext(
 		ctx,
 		DELETE_ACCOUNT,
 		id,
 	); err != nil {
 		log.Printf("db delete transaction by id: %s\n", err.Error())
-		return errors.NewInternalServerError()
+		return errs.NewInternalServerError()
 	}
 
 	return nil
 }
-func (a *accountPG) TransferById(ctx context.Context, accountFromId, accountToId entity.Account, amount float64) (*entity.Transaction, errors.MessageErr) {
+func (a *accountPG) TransferById(ctx context.Context, accountFromId, accountToId entity.Account, amount float64) (*entity.Transaction, errs.MessageErr) {
 	newTransaction := entity.Transaction{}
 	tx, err := a.db.BeginTx(ctx, nil)
     if err != nil {
@@ -185,7 +185,7 @@ func (a *accountPG) TransferById(ctx context.Context, accountFromId, accountToId
 		accountFromId.Id,
 	); err != nil {
 		log.Printf("tx update transfer from by id: %s\n", err.Error())
-		return nil, errors.NewInternalServerError()
+		return nil, errs.NewInternalServerError()
 	}
 
 	if _, err := tx.ExecContext(
@@ -195,7 +195,7 @@ func (a *accountPG) TransferById(ctx context.Context, accountFromId, accountToId
 		accountToId.Id,
 	); err != nil {
 		log.Printf("tx update transfer to by id: %s\n", err.Error())
-		return nil, errors.NewInternalServerError()
+		return nil, errs.NewInternalServerError()
 	}
 
 	if err := tx.QueryRowContext(
@@ -213,12 +213,12 @@ func (a *accountPG) TransferById(ctx context.Context, accountFromId, accountToId
 		&newTransaction.UpdatedAt,
 	); err != nil {
 		log.Printf("tx create transaction: %s\n", err.Error())
-		return nil, errors.NewInternalServerError()
+		return nil, errs.NewInternalServerError()
 	}
 
 	if err = tx.Commit(); err != nil {
 		log.Printf("tx commit update transfer: %s\n", err.Error())
-        return nil, errors.NewInternalServerError()
+        return nil, errs.NewInternalServerError()
     }
 
 	return &newTransaction, nil

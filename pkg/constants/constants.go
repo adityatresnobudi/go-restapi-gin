@@ -9,3 +9,8 @@ const (
 	DBName     = "DB_NAME"
 	APIHost    = "API_HOST"
 )
+
+const (
+	BEARER                      = "Bearer"
+	INVALID_TOKEN_ERROR_MESSAGE = "Invalid token."
+)

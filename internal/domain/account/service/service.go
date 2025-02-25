@@ -7,16 +7,16 @@ import (
 	"github.com/adityatresnobudi/go-restapi-gin/internal/dto"
 	"github.com/adityatresnobudi/go-restapi-gin/internal/entity"
 	"github.com/adityatresnobudi/go-restapi-gin/internal/repositories/account_repo"
-	"github.com/adityatresnobudi/go-restapi-gin/pkg/errors"
+	"github.com/adityatresnobudi/go-restapi-gin/pkg/errs"
 	"github.com/google/uuid"
 )
 
 type AccountService interface {
-	GetAll(ctx context.Context) (*dto.GetAllAccountsResponseDTO, errors.MessageErr)
-	GetOne(ctx context.Context, id string) (*dto.GetOneAccountResponseDTO, errors.MessageErr)
-	Create(ctx context.Context, payload dto.CreateAccountRequestDTO) (*dto.CreateAccountResponseDTO, errors.MessageErr)
-	UpdateById(ctx context.Context, id string, payload dto.UpdateAccountRequestDTO) (*dto.UpdateAccountResponseDTO, errors.MessageErr)
-	DeleteById(ctx context.Context, id string) (*dto.DeleteByIdAccountResponseDTO, errors.MessageErr)
+	GetAll(ctx context.Context) (*dto.GetAllAccountsResponseDTO, errs.MessageErr)
+	GetOne(ctx context.Context, id string) (*dto.GetOneAccountResponseDTO, errs.MessageErr)
+	Create(ctx context.Context, payload dto.CreateAccountRequestDTO) (*dto.CreateAccountResponseDTO, errs.MessageErr)
+	UpdateById(ctx context.Context, id string, payload dto.UpdateAccountRequestDTO) (*dto.UpdateAccountResponseDTO, errs.MessageErr)
+	DeleteById(ctx context.Context, id string) (*dto.DeleteByIdAccountResponseDTO, errs.MessageErr)
 }
 
 type accountServiceIMPL struct {
@@ -29,7 +29,7 @@ func NewAccountService(accountRepo account_repo.Repository) AccountService {
 	}
 }
 
-func (a *accountServiceIMPL) GetAll(ctx context.Context) (*dto.GetAllAccountsResponseDTO, errors.MessageErr) {
+func (a *accountServiceIMPL) GetAll(ctx context.Context) (*dto.GetAllAccountsResponseDTO, errs.MessageErr) {
 	accounts, err := a.accountRepo.GetAll(ctx)
 
 	if err != nil {
@@ -43,11 +43,11 @@ func (a *accountServiceIMPL) GetAll(ctx context.Context) (*dto.GetAllAccountsRes
 	return &result, nil
 }
 
-func (a *accountServiceIMPL) GetOne(ctx context.Context, id string) (*dto.GetOneAccountResponseDTO, errors.MessageErr) {
+func (a *accountServiceIMPL) GetOne(ctx context.Context, id string) (*dto.GetOneAccountResponseDTO, errs.MessageErr) {
 	parsedId, errParseId := uuid.Parse(id)
 
 	if errParseId != nil {
-		return nil, errors.NewBadRequest("id has to be a valid uuid")
+		return nil, errs.NewBadRequest("id has to be a valid uuid")
 	}
 
 	account, err := a.accountRepo.GetOneById(ctx, parsedId)
@@ -66,7 +66,7 @@ func (a *accountServiceIMPL) GetOne(ctx context.Context, id string) (*dto.GetOne
 func (a *accountServiceIMPL) Create(
 	ctx context.Context,
 	payload dto.CreateAccountRequestDTO,
-) (*dto.CreateAccountResponseDTO, errors.MessageErr) {
+) (*dto.CreateAccountResponseDTO, errs.MessageErr) {
 	if err := a.createValidator(payload); err != nil {
 		return nil, err
 	}
@@ -81,7 +81,7 @@ func (a *accountServiceIMPL) Create(
 	}
 
 	if existingAccount != nil {
-		return nil, errors.NewConflictError("please choose another account number")
+		return nil, errs.NewConflictError("please choose another account number")
 	}
 
 	account := entity.Account{
@@ -104,11 +104,11 @@ func (a *accountServiceIMPL) Create(
 	return &result, nil
 }
 
-func (a *accountServiceIMPL) UpdateById(ctx context.Context, id string, payload dto.UpdateAccountRequestDTO) (*dto.UpdateAccountResponseDTO, errors.MessageErr) {
+func (a *accountServiceIMPL) UpdateById(ctx context.Context, id string, payload dto.UpdateAccountRequestDTO) (*dto.UpdateAccountResponseDTO, errs.MessageErr) {
 	parsedId, errParseId := uuid.Parse(id)
 
 	if errParseId != nil {
-		return nil, errors.NewBadRequest("id has to be a valid uuid")
+		return nil, errs.NewBadRequest("id has to be a valid uuid")
 	}
 
 	if err := a.updateValidator(payload); err != nil {
@@ -137,11 +137,11 @@ func (a *accountServiceIMPL) UpdateById(ctx context.Context, id string, payload 
 	return &result, nil
 }
 
-func (a *accountServiceIMPL) DeleteById(ctx context.Context, id string) (*dto.DeleteByIdAccountResponseDTO, errors.MessageErr) {
+func (a *accountServiceIMPL) DeleteById(ctx context.Context, id string) (*dto.DeleteByIdAccountResponseDTO, errs.MessageErr) {
 	parsedId, errParseId := uuid.Parse(id)
 
 	if errParseId != nil {
-		return nil, errors.NewBadRequest("id has to be a valid uuid")
+		return nil, errs.NewBadRequest("id has to be a valid uuid")
 	}
 
 	_, err := a.accountRepo.GetOneById(ctx, parsedId)

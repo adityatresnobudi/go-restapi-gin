@@ -6,7 +6,7 @@ import (
 
 	"github.com/adityatresnobudi/go-restapi-gin/internal/domain/account/service"
 	"github.com/adityatresnobudi/go-restapi-gin/internal/dto"
-	"github.com/adityatresnobudi/go-restapi-gin/pkg/errors"
+	"github.com/adityatresnobudi/go-restapi-gin/pkg/errs"
 	"github.com/gin-gonic/gin"
 )
 
@@ -77,7 +77,7 @@ func (a *accountHandler) Create(c *gin.Context) {
 	payload := dto.CreateAccountRequestDTO{}
 
 	if err := c.ShouldBindJSON(&payload); err != nil {
-		errData := errors.NewUnprocessibleEntityError(err.Error())
+		errData := errs.NewUnprocessibleEntityError(err.Error())
 		c.JSON(errData.StatusCode(), errData)
 		return
 	}
@@ -106,7 +106,7 @@ func (a *accountHandler) UpdateById(c *gin.Context) {
 	payload := dto.UpdateAccountRequestDTO{}
 
 	if err := c.ShouldBindJSON(&payload); err != nil {
-		errData := errors.NewUnprocessibleEntityError(err.Error())
+		errData := errs.NewUnprocessibleEntityError(err.Error())
 		c.JSON(errData.StatusCode(), errData)
 		return
 	}

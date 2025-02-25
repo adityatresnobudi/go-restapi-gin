@@ -8,13 +8,13 @@ import (
 	"github.com/adityatresnobudi/go-restapi-gin/internal/entity"
 	"github.com/adityatresnobudi/go-restapi-gin/internal/repositories/account_repo"
 	"github.com/adityatresnobudi/go-restapi-gin/internal/repositories/transaction_repo"
-	"github.com/adityatresnobudi/go-restapi-gin/pkg/errors"
+	"github.com/adityatresnobudi/go-restapi-gin/pkg/errs"
 	"github.com/google/uuid"
 )
 
 type TransactionService interface {
-	GetTransactionById(ctx context.Context, id string) (*dto.GetTransactionByIdResponseDTO, errors.MessageErr)
-	Create(ctx context.Context, transaction dto.CreateTransactionRequestDTO) (*dto.CreateTransactionResponseDTO, errors.MessageErr)
+	GetTransactionById(ctx context.Context, id string) (*dto.GetTransactionByIdResponseDTO, errs.MessageErr)
+	Create(ctx context.Context, transaction dto.CreateTransactionRequestDTO) (*dto.CreateTransactionResponseDTO, errs.MessageErr)
 }
 
 type transactionServiceIMPL struct {
@@ -29,11 +29,11 @@ func NewTransactionService(transactionRepo transaction_repo.Repository, accountR
 	}
 }
 
-func (t *transactionServiceIMPL) GetTransactionById(ctx context.Context, id string) (*dto.GetTransactionByIdResponseDTO, errors.MessageErr) {
+func (t *transactionServiceIMPL) GetTransactionById(ctx context.Context, id string) (*dto.GetTransactionByIdResponseDTO, errs.MessageErr) {
 	_, errParseId := uuid.Parse(id)
 
 	if errParseId != nil {
-		return nil, errors.NewBadRequest("id has to be a valid uuid")
+		return nil, errs.NewBadRequest("id has to be a valid uuid")
 	}
 
 	transactions, err := t.transactionRepo.GetTransactionById(ctx, id)
@@ -53,7 +53,7 @@ func (t *transactionServiceIMPL) GetTransactionById(ctx context.Context, id stri
 func (t *transactionServiceIMPL) Create(
 	ctx context.Context,
 	transaction dto.CreateTransactionRequestDTO,
-) (*dto.CreateTransactionResponseDTO, errors.MessageErr) {
+) (*dto.CreateTransactionResponseDTO, errs.MessageErr) {
 	parseFromId, _ := uuid.Parse(transaction.FromAccountId)
 	parseToId, _ := uuid.Parse(transaction.ToAccountId)
 	existingAccountFrom, err := t.accountRepo.GetOneById(
@@ -66,7 +66,7 @@ func (t *transactionServiceIMPL) Create(
 	}
 
 	if existingAccountFrom.Balance < transaction.Amount {
-		return nil, errors.NewBadRequest("balance not enough")
+		return nil, errs.NewBadRequest("balance not enough")
 	}
 
 	existingAccountTo, err := t.accountRepo.GetOneById(
@@ -79,7 +79,7 @@ func (t *transactionServiceIMPL) Create(
 	}
 
 	if parseFromId == parseToId {
-		return nil, errors.NewBadRequest("cannot transfer to the same account")
+		return nil, errs.NewBadRequest("cannot transfer to the same account")
 	}
 
 	accountFrom := entity.Account{

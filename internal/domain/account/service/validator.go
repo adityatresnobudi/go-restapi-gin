@@ -4,18 +4,18 @@ import (
 	"strings"
 
 	"github.com/adityatresnobudi/go-restapi-gin/internal/dto"
-	"github.com/adityatresnobudi/go-restapi-gin/pkg/errors"
+	"github.com/adityatresnobudi/go-restapi-gin/pkg/errs"
 )
 
-func (a *accountServiceIMPL) createValidator(payload dto.CreateAccountRequestDTO) errors.MessageErr {
-	errArr := make([]errors.MessageErr, 0)
+func (a *accountServiceIMPL) createValidator(payload dto.CreateAccountRequestDTO) errs.MessageErr {
+	errArr := make([]errs.MessageErr, 0)
 
 	if strings.TrimSpace(payload.AccountNumber) == "" {
-		errArr = append(errArr, errors.NewBadRequest("account number cannot be empty"))
+		errArr = append(errArr, errs.NewBadRequest("account number cannot be empty"))
 	}
 
 	if payload.Balance < 1 {
-		errArr = append(errArr, errors.NewBadRequest("amount cannot be less than 1"))
+		errArr = append(errArr, errs.NewBadRequest("amount cannot be less than 1"))
 	}
 
 	if len(errArr) > 0 {
@@ -24,7 +24,7 @@ func (a *accountServiceIMPL) createValidator(payload dto.CreateAccountRequestDTO
 			msgArr = append(msgArr, value.Error())
 		}
 		errMsg := strings.Join(msgArr, ", ")
-		err := errors.ErrorData{
+		err := errs.ErrorData{
 			ErrCode:       errArr[0].Code(),
 			ErrStatusCode: errArr[0].StatusCode(),
 			ErrMessage:    errMsg,
@@ -35,11 +35,11 @@ func (a *accountServiceIMPL) createValidator(payload dto.CreateAccountRequestDTO
 	return nil
 }
 
-func (a *accountServiceIMPL) updateValidator(payload dto.UpdateAccountRequestDTO) errors.MessageErr {
-	errArr := make([]errors.MessageErr, 0)
+func (a *accountServiceIMPL) updateValidator(payload dto.UpdateAccountRequestDTO) errs.MessageErr {
+	errArr := make([]errs.MessageErr, 0)
 
 	if payload.Balance < 1 {
-		errArr = append(errArr, errors.NewBadRequest("amount cannot be less than 1"))
+		errArr = append(errArr, errs.NewBadRequest("amount cannot be less than 1"))
 	}
 
 	if len(errArr) > 0 {
@@ -48,7 +48,7 @@ func (a *accountServiceIMPL) updateValidator(payload dto.UpdateAccountRequestDTO
 			msgArr = append(msgArr, value.Error())
 		}
 		errMsg := strings.Join(msgArr, ", ")
-		err := errors.ErrorData{
+		err := errs.ErrorData{
 			ErrCode:       errArr[0].Code(),
 			ErrStatusCode: errArr[0].StatusCode(),
 			ErrMessage:    errMsg,

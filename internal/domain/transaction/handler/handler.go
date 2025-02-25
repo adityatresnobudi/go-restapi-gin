@@ -6,7 +6,7 @@ import (
 
 	"github.com/adityatresnobudi/go-restapi-gin/internal/domain/transaction/service"
 	"github.com/adityatresnobudi/go-restapi-gin/internal/dto"
-	"github.com/adityatresnobudi/go-restapi-gin/pkg/errors"
+	"github.com/adityatresnobudi/go-restapi-gin/pkg/errs"
 	"github.com/gin-gonic/gin"
 )
 
@@ -60,7 +60,7 @@ func (t *transactionHandler) Create(c *gin.Context) {
 	payload := dto.CreateTransactionRequestDTO{}
 
 	if err := c.ShouldBindJSON(&payload); err != nil {
-		errData := errors.NewUnprocessibleEntityError(err.Error())
+		errData := errs.NewUnprocessibleEntityError(err.Error())
 		c.JSON(errData.StatusCode(), errData)
 		return
 	}
