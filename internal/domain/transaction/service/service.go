@@ -78,11 +78,8 @@ func (t *transactionServiceIMPL) Create(
 		return nil, err
 	}
 
-	newTransaction := entity.Transaction{
-		Id:            parseFromId,
-		AccountIdFrom: transaction.FromAccountId,
-		AccountIdTo:   transaction.ToAccountId,
-		Amount:        transaction.Amount,
+	if parseFromId == parseToId {
+		return nil, errors.NewBadRequest("cannot transfer to the same account")
 	}
 
 	accountFrom := entity.Account{
@@ -97,25 +94,10 @@ func (t *transactionServiceIMPL) Create(
 		Balance:       existingAccountTo.Balance + transaction.Amount,
 	}
 
-	err = t.accountRepo.TransferById(ctx, accountFrom, accountTo)
+	resp, err := t.accountRepo.TransferById(ctx, accountFrom, accountTo, transaction.Amount)
 	if err != nil {
 		return nil, err
 	}
-
-	resp, err := t.transactionRepo.Create(ctx, newTransaction)
-	if err != nil {
-		return nil, err
-	}
-
-	// _, err = t.accountRepo.UpdateById(ctx, accountFrom)
-	// if err != nil {
-	// 	return nil, err
-	// }
-
-	// _, err = t.accountRepo.UpdateById(ctx, accountTo)
-	// if err != nil {
-	// 	return nil, err
-	// }
 
 	result := dto.CreateTransactionResponseDTO{
 		CommonBaseResponseDTO: dto.CommonBaseResponseDTO{Message: "Transaction created successfully"},

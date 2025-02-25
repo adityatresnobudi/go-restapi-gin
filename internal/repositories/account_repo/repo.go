@@ -15,5 +15,5 @@ type Repository interface {
 	GetOneByAccountNumber(ctx context.Context, accountNumber string) (*entity.Account, errors.MessageErr)
 	UpdateById(ctx context.Context, account entity.Account) (*entity.Account, errors.MessageErr)
 	DeleteById(ctx context.Context, id uuid.UUID) errors.MessageErr
-	TransferById(ctx context.Context, accountFromId, accountToId entity.Account) (errors.MessageErr)
+	TransferById(ctx context.Context, accountFromId, accountToId entity.Account, amount float64) (*entity.Transaction, errors.MessageErr)
 }

@@ -38,3 +38,9 @@ const UPDATE_BALANCE = `
 	SET balance = $1
 	WHERE id = $2
 `
+
+const INSERT_TRANSACTION = `
+	INSERT INTO transactions (account_id_from, account_id_to, amount) 
+	VALUES ($1, $2, $3)
+	RETURNING id, account_id_from, account_id_to, amount, created_at, updated_at
+`

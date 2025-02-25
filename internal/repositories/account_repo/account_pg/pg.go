@@ -169,7 +169,8 @@ func (a *accountPG) DeleteById(ctx context.Context, id uuid.UUID) errors.Message
 
 	return nil
 }
-func (a *accountPG) TransferById(ctx context.Context, accountFromId, accountToId entity.Account) errors.MessageErr {
+func (a *accountPG) TransferById(ctx context.Context, accountFromId, accountToId entity.Account, amount float64) (*entity.Transaction, errors.MessageErr) {
+	newTransaction := entity.Transaction{}
 	tx, err := a.db.BeginTx(ctx, nil)
     if err != nil {
         log.Printf("tx begin: %s\n", err.Error())
@@ -184,7 +185,7 @@ func (a *accountPG) TransferById(ctx context.Context, accountFromId, accountToId
 		accountFromId.Id,
 	); err != nil {
 		log.Printf("tx update transfer from by id: %s\n", err.Error())
-		return errors.NewInternalServerError()
+		return nil, errors.NewInternalServerError()
 	}
 
 	if _, err := tx.ExecContext(
@@ -194,13 +195,31 @@ func (a *accountPG) TransferById(ctx context.Context, accountFromId, accountToId
 		accountToId.Id,
 	); err != nil {
 		log.Printf("tx update transfer to by id: %s\n", err.Error())
-		return errors.NewInternalServerError()
+		return nil, errors.NewInternalServerError()
+	}
+
+	if err := tx.QueryRowContext(
+		ctx, 
+		INSERT_TRANSACTION,
+		accountFromId.Id,
+		accountToId.Id,
+		amount,
+	).Scan(
+		&newTransaction.Id,
+		&newTransaction.AccountIdFrom,
+		&newTransaction.AccountIdTo,
+		&newTransaction.Amount,
+		&newTransaction.CreatedAt,
+		&newTransaction.UpdatedAt,
+	); err != nil {
+		log.Printf("tx create transaction: %s\n", err.Error())
+		return nil, errors.NewInternalServerError()
 	}
 
 	if err = tx.Commit(); err != nil {
 		log.Printf("tx commit update transfer: %s\n", err.Error())
-        return errors.NewInternalServerError()
+        return nil, errors.NewInternalServerError()
     }
 
-	return nil
+	return &newTransaction, nil
 }
