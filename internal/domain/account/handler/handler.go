@@ -6,6 +6,7 @@ import (
 
 	"github.com/adityatresnobudi/go-restapi-gin/internal/domain/account/service"
 	"github.com/adityatresnobudi/go-restapi-gin/internal/dto"
+	"github.com/adityatresnobudi/go-restapi-gin/internal/middleware/auth"
 	"github.com/adityatresnobudi/go-restapi-gin/pkg/errs"
 	"github.com/gin-gonic/gin"
 )
@@ -13,17 +14,20 @@ import (
 type accountHandler struct {
 	r       *gin.Engine
 	ctx     context.Context
+	auth    auth.AuthMiddleware
 	service service.AccountService
 }
 
 func NewAccountHandler(
 	r *gin.Engine,
 	ctx context.Context,
+	auth auth.AuthMiddleware,
 	service service.AccountService,
 ) *accountHandler {
 	return &accountHandler{
 		r:       r,
 		ctx:     ctx,
+		auth:    auth,
 		service: service,
 	}
 }

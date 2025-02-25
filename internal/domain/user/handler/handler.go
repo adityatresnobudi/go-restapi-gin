@@ -11,16 +11,16 @@ import (
 )
 
 type userHandler struct {
-	service service.UserService
-	r       *gin.Engine
 	ctx     context.Context
+	r       *gin.Engine
+	service service.UserService
 }
 
-func NewUserHandler(service service.UserService, r *gin.Engine, ctx context.Context) *userHandler {
+func NewUserHandler(ctx context.Context,r *gin.Engine, service service.UserService) *userHandler {
 	return &userHandler{
-		service: service,
-		r:       r,
 		ctx:     ctx,
+		r:       r,
+		service: service,
 	}
 }
 

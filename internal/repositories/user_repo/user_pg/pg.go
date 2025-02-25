@@ -14,7 +14,7 @@ type userPG struct {
 	db *sql.DB
 }
 
-func NewUserRepo(db *sql.DB) user_repo.Repository {
+func NewRepo(db *sql.DB) user_repo.Repository {
 	return &userPG{
 		db: db,
 	}
