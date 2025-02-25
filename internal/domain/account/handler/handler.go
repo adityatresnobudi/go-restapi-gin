@@ -38,7 +38,7 @@ func NewAccountHandler(
 // @Success 200 {object}  GetAllAccountsResponse
 // @Router /accounts [get]
 func (a *accountHandler) GetAll(c *gin.Context) {
-	result, err := a.service.GetAll(a.ctx)
+	result, err := a.service.GetAll(c)
 
 	if err != nil {
 		c.JSON(err.StatusCode(), err)
@@ -83,7 +83,7 @@ func (a *accountHandler) Create(c *gin.Context) {
 		return
 	}
 
-	result, err := a.service.Create(a.ctx, payload)
+	result, err := a.service.Create(c, payload)
 
 	if err != nil {
 		c.JSON(err.StatusCode(), err)
@@ -111,7 +111,7 @@ func (a *accountHandler) UpdateById(c *gin.Context) {
 		return
 	}
 
-	result, errData := a.service.UpdateById(a.ctx, id, payload)
+	result, errData := a.service.UpdateById(c, id, payload)
 
 	if errData != nil {
 		c.JSON(errData.StatusCode(), errData)
@@ -131,7 +131,7 @@ func (a *accountHandler) UpdateById(c *gin.Context) {
 func (a *accountHandler) DeleteById(c *gin.Context) {
 	id := c.Param("id")
 
-	result, errData := a.service.DeleteById(a.ctx, id)
+	result, errData := a.service.DeleteById(c, id)
 
 	if errData != nil {
 		c.JSON(errData.StatusCode(), errData)

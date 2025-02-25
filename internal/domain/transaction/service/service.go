@@ -30,10 +30,24 @@ func NewTransactionService(transactionRepo transaction_repo.Repository, accountR
 }
 
 func (t *transactionServiceIMPL) GetTransactionById(ctx context.Context, id string) (*dto.GetTransactionByIdResponseDTO, errs.MessageErr) {
-	_, errParseId := uuid.Parse(id)
+	username := ctx.Value("username")
+	parsedId, errParseId := uuid.Parse(id)
 
 	if errParseId != nil {
 		return nil, errs.NewBadRequest("id has to be a valid uuid")
+	}
+
+	user, err := t.accountRepo.GetOneByUsername(ctx, username.(string))
+	if err != nil {
+		return nil, err
+	}
+	account, err := t.accountRepo.GetOneById(ctx, parsedId)
+	if err != nil {
+		return nil, err
+	}
+
+	if user.AccountNumber != account.AccountNumber {
+		return nil, errs.NewBadRequest("id has to be your id")
 	}
 
 	transactions, err := t.transactionRepo.GetTransactionById(ctx, id)
@@ -54,8 +68,15 @@ func (t *transactionServiceIMPL) Create(
 	ctx context.Context,
 	transaction dto.CreateTransactionRequestDTO,
 ) (*dto.CreateTransactionResponseDTO, errs.MessageErr) {
+	username := ctx.Value("username")
 	parseFromId, _ := uuid.Parse(transaction.FromAccountId)
 	parseToId, _ := uuid.Parse(transaction.ToAccountId)
+
+	user, err := t.accountRepo.GetOneByUsername(ctx, username.(string))
+	if err != nil {
+		return nil, err
+	}
+
 	existingAccountFrom, err := t.accountRepo.GetOneById(
 		ctx,
 		parseFromId,
@@ -63,6 +84,10 @@ func (t *transactionServiceIMPL) Create(
 
 	if err != nil && err.StatusCode() != http.StatusNotFound {
 		return nil, err
+	}
+
+	if user.AccountNumber != existingAccountFrom.AccountNumber {
+		return nil, errs.NewBadRequest("cannot transfer from other account")
 	}
 
 	if existingAccountFrom.Balance < transaction.Amount {

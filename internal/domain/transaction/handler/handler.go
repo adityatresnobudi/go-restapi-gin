@@ -39,10 +39,9 @@ func NewTransactionHandler(
 // @Success 200 {object}  GetTransactionByIdResponseDTO
 // @Router /accounts/{id}/transactions [get]
 func (t *transactionHandler) GetTransactionById(c *gin.Context) {
-	ctx := c.Request.Context()
 	id := c.Param("id")
 
-	result, err := t.service.GetTransactionById(ctx, id)
+	result, err := t.service.GetTransactionById(c, id)
 
 	if err != nil {
 		c.JSON(err.StatusCode(), err)
@@ -60,7 +59,6 @@ func (t *transactionHandler) GetTransactionById(c *gin.Context) {
 // @Success 201 {object} CreateTransactionResponseDTO
 // @Router /transactions [post]
 func (t *transactionHandler) Create(c *gin.Context) {
-	ctx := c.Request.Context()
 	payload := dto.CreateTransactionRequestDTO{}
 
 	if err := c.ShouldBindJSON(&payload); err != nil {
@@ -69,7 +67,7 @@ func (t *transactionHandler) Create(c *gin.Context) {
 		return
 	}
 
-	result, errData := t.service.Create(ctx, payload)
+	result, errData := t.service.Create(c, payload)
 
 	if errData != nil {
 		c.JSON(errData.StatusCode(), errData)
