@@ -44,16 +44,26 @@ func (a *accountServiceIMPL) GetAll(ctx context.Context) (*dto.GetAllAccountsRes
 }
 
 func (a *accountServiceIMPL) GetOne(ctx context.Context, id string) (*dto.GetOneAccountResponseDTO, errs.MessageErr) {
+	username := ctx.Value("username")
 	parsedId, errParseId := uuid.Parse(id)
 
 	if errParseId != nil {
 		return nil, errs.NewBadRequest("id has to be a valid uuid")
 	}
 
+	user, err := a.accountRepo.GetOneByUsername(ctx, username.(string))
+	if err != nil {
+		return nil, err
+	}
+
 	account, err := a.accountRepo.GetOneById(ctx, parsedId)
 
 	if err != nil {
 		return nil, err
+	}
+
+	if user.AccountNumber != account.AccountNumber {
+		return nil, errs.NewBadRequest("id has to be your id")
 	}
 
 	result := dto.GetOneAccountResponseDTO{

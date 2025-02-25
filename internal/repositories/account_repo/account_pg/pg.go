@@ -108,6 +108,31 @@ func (a *accountPG) GetOneByAccountNumber(ctx context.Context, accountNum string
 	return &account, nil
 }
 
+func (a *accountPG) GetOneByUsername(ctx context.Context, username string) (*entity.Account, errs.MessageErr) {
+	account := entity.Account{}
+
+	if err := a.db.QueryRowContext(
+		ctx,
+		GET_ACCOUNT_BY_USERNAME,
+		username,
+	).Scan(
+		&account.Id,
+		&account.AccountNumber,
+		&account.AccountHolder,
+		&account.Balance,
+		&account.CreatedAt,
+		&account.UpdatedAt,
+	); err != nil {
+		log.Printf("db scan get one account by accountNum: %s\n", err.Error())
+		if err == sql.ErrNoRows {
+			return nil, errs.NewNotFoundError("account was not found")
+		}
+		return nil, errs.NewInternalServerError()
+	}
+
+	return &account, nil
+}
+
 func (a *accountPG) Create(ctx context.Context, account entity.Account) (*entity.Account, errs.MessageErr) {
 	newAccount := entity.Account{}
 

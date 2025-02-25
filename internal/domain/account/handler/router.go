@@ -6,6 +6,6 @@ func (a *accountHandler) MapRoutes() {
 		POST("", a.Create).
 		PUT("/:id", a.UpdateById).
 		DELETE("/:id", a.DeleteById)
-	a.r.Group("/accounts").
+	a.r.Group("/accounts", a.auth.Authentication()).
 		GET("/:id", a.GetOne)
 }

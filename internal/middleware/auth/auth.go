@@ -63,7 +63,7 @@ func (a *authMiddlewareIMPL) Authentication() gin.HandlerFunc {
 
 		c.Set("userId", int(id))
 		c.Set("roles", user.Roles)
-
+		c.Set("username", user.Username)
 		c.Next()
 	}
 }

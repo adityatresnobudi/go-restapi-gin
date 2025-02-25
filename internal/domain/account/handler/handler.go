@@ -57,7 +57,7 @@ func (a *accountHandler) GetAll(c *gin.Context) {
 func (a *accountHandler) GetOne(c *gin.Context) {
 	id := c.Param("id")
 
-	result, err := a.service.GetOne(a.ctx, id)
+	result, err := a.service.GetOne(c, id)
 
 	if err != nil {
 		c.JSON(err.StatusCode(), err)

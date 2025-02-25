@@ -15,6 +15,11 @@ const GET_ACCOUNT_BY_ACCOUNTNUM = `
 	FROM accounts WHERE account_number = $1
 `
 
+const GET_ACCOUNT_BY_USERNAME = `
+	SELECT id, account_number, account_holder, balance, created_at, updated_at
+	FROM accounts WHERE account_holder = $1
+`
+
 const INSERT_ACCOUNT = `
 	INSERT INTO accounts (account_number, account_holder, balance) 
 	VALUES ($1, $2, $3, $4)
