@@ -32,7 +32,6 @@ func InitializeTable(db *sql.DB) error {
   		account_number VARCHAR(255) NOT NULL,
   		account_holder VARCHAR(255) not null,
   		balance FLOAT NOT NULL, 
-		roles VARCHAR(50) NOT NULL CHECK (roles IN ('user', 'admin')),
   		created_at TIMESTAMPTZ DEFAULT NOW(),
   		updated_at TIMESTAMPTZ DEFAULT NOW()
 	);`
@@ -51,7 +50,8 @@ func InitializeTable(db *sql.DB) error {
 		CREATE TABLE IF NOT EXISTS users (
 		id BIGSERIAL PRIMARY KEY NOT NULL,
 		username VARCHAR(255) NOT NULL,
-		password VARCHAR(255) NOT NULL
+		password VARCHAR(255) NOT NULL,
+		roles VARCHAR(50) NOT NULL CHECK (roles IN ('user', 'admin')) DEFAULT 'user',
 	);
 	`
 

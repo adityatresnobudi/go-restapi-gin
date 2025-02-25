@@ -13,6 +13,7 @@ type User struct {
 	Id        int
 	Username  string
 	Password  string
+	Roles     string
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
@@ -21,6 +22,7 @@ func (u *User) ToUserResponseDTO() *dto.UserResponseDTO {
 	return &dto.UserResponseDTO{
 		Id:        u.Id,
 		Username:  u.Username,
+		Roles: u.Roles,
 		CreatedAt: u.CreatedAt,
 		UpdatedAt: u.UpdatedAt,
 	}
